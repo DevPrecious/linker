@@ -5,6 +5,7 @@ namespace App\Filament\User\Resources;
 use App\Filament\User\Resources\AnalyticResource\Pages;
 use App\Filament\User\Resources\AnalyticResource\RelationManagers;
 use App\Models\Analytic;
+use App\Models\Link;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -75,5 +76,16 @@ class AnalyticResource extends Resource
             // 'create' => Pages\CreateAnalytic::route('/create'),
             // 'edit' => Pages\EditAnalytic::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $user_id = auth()->id();
+        $links = Link::where('user_id', $user_id)->get();
+        $analytics = [];
+        foreach ($links as $link) {
+            $analytics[] = $link->analytics->pluck('id')->toArray();
+        }
+        return parent::getEloquentQuery()->whereIn('id', array_merge(...$analytics));
     }
 }

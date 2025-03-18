@@ -91,4 +91,9 @@ class LinkResource extends Resource
             'edit' => Pages\EditLink::route('/{record}/edit'),
         ];
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('user_id', auth()->id());
+    }
 }

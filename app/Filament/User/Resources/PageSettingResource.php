@@ -75,4 +75,9 @@ class PageSettingResource extends Resource
             'edit' => Pages\EditPageSetting::route('/{record}/edit'),
         ];
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('user_id', auth()->id());
+    }
 }
